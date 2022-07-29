@@ -1,12 +1,13 @@
 # Программа для работы с фоторезистором
 
-Сборка:
-g++ light_detect.cpp Adafruit_ADS1X15_RPi/Adafruit_ADS1015.cpp -o light_detect -lwiringPi
-Запуск:
-sudo ./light_detect [-h][-q] N
--h - описание работы
--q - тихий режим, выводится только значения отсчетов АЦП о засветке фоторезистора
-N - период вывода значений в мс
+Сборка:  
+g++ light_detect.cpp Adafruit_ADS1X15_RPi/Adafruit_ADS1015.cpp -o light_detect -lwiringPi  
+
+Запуск:  
+sudo ./light_detect [-h][-q] N  
+-h - описание работы  
+-q - тихий режим, выводится только значения отсчетов АЦП о засветке фоторезистора  
+N - период вывода значений в мс  
 
 Выходные данные: 
 Значение отсчетов АЦП 
