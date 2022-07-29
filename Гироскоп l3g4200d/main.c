@@ -72,30 +72,30 @@ void askGiro(int file)
     {
         zGyro -= 65536;
     }
-/*
-    if ((xGyro & 0x8000) == 0)
-    {
-        xSign = 0;
-    }
-    else
-    {
-        xSign = 1;
-        xGyro &= 0x7FFF;
-        xGyro = 0x8000 - xGyro;
-    }
-    if (xGyro < 0x0A)
-    {
-        xGyro = 0;
-    }
-    if (xSign == 0)
-    {
-        xPosition += 0.07 * xGyro * 0.02;
-    }
-    else
-    {
-        xPosition -= 0.07 * xGyro * 0.02;
-    }
-*/
+    /*
+        if ((xGyro & 0x8000) == 0)
+        {
+            xSign = 0;
+        }
+        else
+        {
+            xSign = 1;
+            xGyro &= 0x7FFF;
+            xGyro = 0x8000 - xGyro;
+        }
+        if (xGyro < 0x0A)
+        {
+            xGyro = 0;
+        }
+        if (xSign == 0)
+        {
+            xPosition += 0.07 * xGyro * 0.02;
+        }
+        else
+        {
+            xPosition -= 0.07 * xGyro * 0.02;
+        }
+    */
     // Output data to screen
     double dpsX = xGyro * 0.068;
     double dpsY = yGyro * 0.068;

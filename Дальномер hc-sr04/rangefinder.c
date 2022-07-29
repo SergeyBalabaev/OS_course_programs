@@ -5,42 +5,44 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h> 
-#include <time.h> 
+#include <string.h>
+#include <time.h>
 
-#define IN  0
+#define IN 0
 #define OUT 1
 
-#define LOW  0
+#define LOW 0
 #define HIGH 1
 
 //***************************//
-#define TRIG 21         //GPIO PIN TRIG
-#define ECHO 20         //GPIO PIN ECHO
+#define TRIG 21 // GPIO PIN TRIG
+#define ECHO 20 // GPIO PIN ECHO
 //***************************//
 
 void Exiting(int);
 
-int read_pins_file(char* file) {
+int read_pins_file(char *file)
+{
 
-	FILE* f = fopen(file, "r");
-	if (f == 0) {
+	FILE *f = fopen(file, "r");
+	if (f == 0)
+	{
 		fprintf(stderr, "ERROR: can't open %s file\n", file);
 		return -1;
 	}
 
 	char str[32];
-	while (!feof(f)) {
-		if (fscanf(f, "%s\n", str)) printf("%s\n", str);
+	while (!feof(f))
+	{
+		if (fscanf(f, "%s\n", str))
+			printf("%s\n", str);
 		fflush(stdout);
 		sleep(1);
 	}
 	fclose(f);
 
 	return 0;
-
 }
-
 
 static int
 GPIOExport(int pin)
@@ -51,7 +53,8 @@ GPIOExport(int pin)
 	int fd;
 
 	fd = open("/sys/class/gpio/export", O_WRONLY);
-	if (-1 == fd) {
+	if (-1 == fd)
+	{
 		fprintf(stderr, "Failed to open export for writing!\n");
 		Exiting(-1);
 	}
@@ -59,9 +62,8 @@ GPIOExport(int pin)
 	bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
 	write(fd, buffer, bytes_written);
 	close(fd);
-	return(0);
+	return (0);
 }
-
 
 static int
 GPIOUnexport(int pin)
@@ -71,7 +73,8 @@ GPIOUnexport(int pin)
 	int fd;
 
 	fd = open("/sys/class/gpio/unexport", O_WRONLY);
-	if (-1 == fd) {
+	if (-1 == fd)
+	{
 		fprintf(stderr, "Failed to open unexport for writing!\n");
 		Exiting(-1);
 	}
@@ -79,9 +82,8 @@ GPIOUnexport(int pin)
 	bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
 	write(fd, buffer, bytes_written);
 	close(fd);
-	return(0);
+	return (0);
 }
-
 
 static int
 GPIODirection(int pin, int dir)
@@ -94,20 +96,21 @@ GPIODirection(int pin, int dir)
 
 	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d/direction", pin);
 	fd = open(path, O_WRONLY);
-	if (-1 == fd) {
+	if (-1 == fd)
+	{
 		fprintf(stderr, "Failed to open gpio direction for writing!\n");
 		Exiting(-1);
 	}
 
-	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3)) {
+	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3))
+	{
 		fprintf(stderr, "Failed to set direction!\n");
 		Exiting(-1);
 	}
 
 	close(fd);
-	return(0);
+	return (0);
 }
-
 
 static int
 GPIORead(int pin)
@@ -119,21 +122,22 @@ GPIORead(int pin)
 
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_RDONLY);
-	if (-1 == fd) {
+	if (-1 == fd)
+	{
 		fprintf(stderr, "Failed to open gpio value for reading!\n");
 		Exiting(-1);
 	}
 
-	if (-1 == read(fd, value_str, 3)) {
+	if (-1 == read(fd, value_str, 3))
+	{
 		fprintf(stderr, "Failed to read value!\n");
 		Exiting(-1);
 	}
 
 	close(fd);
 
-	return(atoi(value_str));
+	return (atoi(value_str));
 }
-
 
 static int
 GPIOWrite(int pin, int value)
@@ -145,35 +149,38 @@ GPIOWrite(int pin, int value)
 
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_WRONLY);
-	if (-1 == fd) {
+	if (-1 == fd)
+	{
 		fprintf(stderr, "Failed to open gpio value for writing!\n");
 		Exiting(-1);
 	}
 
-	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1)) {
+	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1))
+	{
 		fprintf(stderr, "Failed to write value!\n");
 		Exiting(-1);
 	}
 
 	close(fd);
-	return(0);
+	return (0);
 }
 
-
-void Exiting(int parameter) {
+void Exiting(int parameter)
+{
 	GPIOUnexport(TRIG);
 	GPIOUnexport(ECHO);
 	exit(parameter);
 }
 
-void Exiting_sig() {
+void Exiting_sig()
+{
 	GPIOUnexport(TRIG);
 	GPIOUnexport(ECHO);
 	exit(0);
 }
 
-
-void help() {
+void help()
+{
 
 	printf("    Use this application for reading from Stepper Motor\n");
 	printf("    execute format: ./range TIME \n");
@@ -183,28 +190,35 @@ void help() {
 	printf("    -q - quiet\n");
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
 	int quiet = 0;
-	if (argc > 1)  {
-		if ((strcmp(argv[1], "-h") == 0)) {
+	if (argc > 1)
+	{
+		if ((strcmp(argv[1], "-h") == 0))
+		{
 			help();
 			return 0;
 		}
-		else {
-			if ((strcmp(argv[1], "-q") == 0)) {
+		else
+		{
+			if ((strcmp(argv[1], "-q") == 0))
+			{
 				quiet = 1;
 			}
 		}
 	}
 
-	if (!quiet) printf("\nThe Stepper Motor application was started\n\n");
-	char* mode = argv[1 + quiet];
+	if (!quiet)
+		printf("\nThe Stepper Motor application was started\n\n");
+	char *mode = argv[1 + quiet];
 
-	if (strcmp(mode, "-s") == 0) {
+	if (strcmp(mode, "-s") == 0)
+	{
 		char data[32];
-		while (1) {
+		while (1)
+		{
 			scanf("%s", data);
 			fflush(stdin);
 			printf("%s\n", data);
@@ -212,13 +226,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if (strcmp(mode, "-f") == 0) {
-		char* file = argv[2 + quiet];
-		if (read_pins_file(file) < 0) 	return -1;
-		else 				return  0;
+	if (strcmp(mode, "-f") == 0)
+	{
+		char *file = argv[2 + quiet];
+		if (read_pins_file(file) < 0)
+			return -1;
+		else
+			return 0;
 	}
-
-
 
 	double search_time = 0;
 	signal(SIGINT, Exiting_sig);
@@ -228,24 +243,32 @@ int main(int argc, char* argv[])
 	GPIODirection(ECHO, IN);
 	sleep(0.05);
 	int argument = 1;
-	if (quiet) argument++;
+	if (quiet)
+		argument++;
 
 	double sl;
-	while (1) {
+	while (1)
+	{
 
 		GPIOWrite(TRIG, 1);
 		usleep(10);
 		GPIOWrite(TRIG, 0);
-		while (!GPIORead(ECHO)) {}
+		while (!GPIORead(ECHO))
+		{
+		}
 		double start_time = clock();
-		while (GPIORead(ECHO)) {}
+		while (GPIORead(ECHO))
+		{
+		}
 		double end_time = clock();
 		search_time = end_time - start_time;
 
 		sl = atoi(argv[argument]);
 
-		if (!quiet) printf("Length = %lf cm\n", search_time / 58);
-		else printf("%lf\n", search_time / 58);
+		if (!quiet)
+			printf("Length = %lf cm\n", search_time / 58);
+		else
+			printf("%lf\n", search_time / 58);
 		fflush(stdout);
 		if ((sl > 0) && (sl < 60000))
 			usleep(sl * 1000);
