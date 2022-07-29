@@ -1,5 +1,4 @@
-Readme.MD
-Программа для работы с фоторезистором
+# Программа для работы с фоторезистором
 
 Сборка:
 g++ light_detect.cpp Adafruit_ADS1X15_RPi/Adafruit_ADS1015.cpp -o light_detect -lwiringPi
