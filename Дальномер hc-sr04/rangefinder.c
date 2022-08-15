@@ -23,7 +23,6 @@ void Exiting(int);
 
 int read_pins_file(char *file)
 {
-
 	FILE *f = fopen(file, "r");
 	if (f == 0)
 	{
