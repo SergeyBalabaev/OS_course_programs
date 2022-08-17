@@ -17,11 +17,11 @@ g++ MFRC522.cpp main.cpp -std=c++11 -lbcm2835
 ```   
  sudo ./prog
 ```  
-Enter your choice:
-        1: Print UID
-        2: Write information
-        3: Read information
+Enter your choice:  
+        1: Print UID  
+        2: Write information  
+        3: Read information  
 
-1 - вывод на экран значения UID
-2 - запись информации в блок
-3 - чтение информации из блока
+1 - вывод на экран значения UID  
+2 - запись информации в блок  
+3 - чтение информации из блока  
