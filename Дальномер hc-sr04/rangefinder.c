@@ -181,7 +181,7 @@ void Exiting_sig()
 void help()
 {
 
-	printf("    Use this application for reading from Stepper Motor\n");
+	printf("    Use this application for reading from rangefinder\n");
 	printf("    execute format: ./range TIME \n");
 	printf("    return: length in cm\n");
 	printf("    TIME - pause between writing in ms\n");
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (!quiet)
-		printf("\nThe Stepper Motor application was started\n\n");
+		printf("\nThe rabgefinder application was started\n\n");
 	char *mode = argv[1 + quiet];
 
 	if (strcmp(mode, "-s") == 0)

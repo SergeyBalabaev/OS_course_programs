@@ -5,137 +5,230 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <string.h>
 
-uint8_t xSign;
+// минимальное значение скорости поворота
+#define MIN_VAL 500
+
+// значение чувствительности из datasheet
+#define SENSITIVITY_250 8.75f
+#define SENSITIVITY_500 17.5f
+#define SENSITIVITY_2000 70.0f
+
+// значения чувствительности * калибровочный коэффициент
+#define MAGIC_CONST_X (SENSITIVITY_2000 * 2)
+#define MAGIC_CONST_Y (SENSITIVITY_2000 * 2)
+#define MAGIC_CONST_Z (SENSITIVITY_2000 * 2)
+
+// адрес шины i2c
+#define I2C "/dev/i2c-0"
+
+// время опроса (ms)
+#define TIME 10.0
+
+uint8_t xSign, ySign, zSign;
 float xPosition = 0;
+float yPosition = 0;
+float zPosition = 0;
 
-void askGiro(int file)
+// Возвращает изменение температуры кристалла. 25 - точка отсчета
+void askTemp(int file)
 {
-    // Read 6 bytes of data
-    // lsb first
-    // Read xGyro lsb data from register(0x28)
-    char reg[1] = {0x28};
+    char reg[1];
+    char data[1];
+    char temp;
+    reg[0] = 0x26;
     write(file, reg, 1);
-    char data[1] = {0};
-    if (read(file, data, 1) != 1)
+    read(file, data, 1);
+    temp = 25 - data[0];
+    printf("Temp deviation : %d\n", temp);
+}
+
+void askGiro(int file, char pos, double time)
+{
+    char reg[1];
+    char data[1];
+    char data_0, data_1;
+    if (pos == 'X')
     {
-        printf("Error : Input/Output error \n");
-        exit(1);
-    }
-    char data_0 = data[0];
-
-    // Read xGyro msb data from register(0x29)
-    reg[0] = 0x29;
-    write(file, reg, 1);
-    read(file, data, 1);
-    char data_1 = data[0];
-
-    // Read yGyro lsb data from register(0x2A)
-    reg[0] = 0x2A;
-    write(file, reg, 1);
-    read(file, data, 1);
-    char data_2 = data[0];
-
-    // Read yGyro msb data from register(0x2B)
-    reg[0] = 0x2B;
-    write(file, reg, 1);
-    read(file, data, 1);
-    char data_3 = data[0];
-
-    // Read zGyro lsb data from register(0x2C)
-    reg[0] = 0x2C;
-    write(file, reg, 1);
-    read(file, data, 1);
-    char data_4 = data[0];
-
-    // Read zGyro msb data from register(0x2D)
-    reg[0] = 0x2D;
-    write(file, reg, 1);
-    read(file, data, 1);
-    char data_5 = data[0];
-
-    // Convert the data
-    int16_t xGyro = (data_1 << 8 | data_0);
-    if (xGyro > 32767)
-    {
-        xGyro -= 65536;
-    }
-
-    int16_t yGyro = (data_3 << 8 | data_2);
-    if (yGyro > 32767)
-    {
-        yGyro -= 65536;
-    }
-
-    int16_t zGyro = (data_5 << 8 | data_4);
-    if (zGyro > 32767)
-    {
-        zGyro -= 65536;
-    }
-    /*
+        // Чтение значения xGyro lsb из регистра 0x28
+        reg[0] = 0x28;
+        write(file, reg, 1);
+        read(file, data, 1);
+        data_0 = data[0];
+        // Чтение значения xGyro msb из регистра 0x29
+        reg[0] = 0x29;
+        write(file, reg, 1);
+        read(file, data, 1);
+        data_1 = data[0];
+        // Получение данных
+        int16_t xGyro = (data_1 << 8 | data_0);
+        // Обнуляем минимальные значения, чтобы избежать накопления ошибки из-за шумов
+        if (xGyro < MIN_VAL && xGyro > -MIN_VAL)
+            xGyro = 0;
+        if (xGyro > 32767)
+            xGyro -= 65536;
+        // проверяем первый знаковый бит
         if ((xGyro & 0x8000) == 0)
-        {
             xSign = 0;
-        }
         else
         {
             xSign = 1;
+            // обнуляем первый знаковый бит
             xGyro &= 0x7FFF;
             xGyro = 0x8000 - xGyro;
         }
-        if (xGyro < 0x0A)
-        {
-            xGyro = 0;
-        }
         if (xSign == 0)
+            xPosition += MAGIC_CONST_X * xGyro * (time / 1000) / 1000;
+        else
+            xPosition -= MAGIC_CONST_X * xGyro * (time / 1000) / 1000;
+        printf("X : %lf\n", xPosition);
+        return;
+    }
+
+    if (pos == 'Y')
+    {
+        reg[0] = 0x2A;
+        write(file, reg, 1);
+        read(file, data, 1);
+        data_0 = data[0];
+        reg[0] = 0x2B;
+        write(file, reg, 1);
+        read(file, data, 1);
+        data_1 = data[0];
+        int16_t yGyro = (data_1 << 8 | data_0);
+        if (yGyro < MIN_VAL && yGyro > -MIN_VAL)
+            yGyro = 0;
+        if (yGyro > 32767)
+            yGyro -= 65536;
+        if ((yGyro & 0x8000) == 0)
+            ySign = 0;
+        else
         {
-            xPosition += 0.07 * xGyro * 0.02;
+            ySign = 1;
+            yGyro &= 0x7FFF;
+            yGyro = 0x8000 - yGyro;
+        }
+        if (ySign == 0)
+            yPosition += MAGIC_CONST_Y * yGyro * (time / 1000) / 1000;
+        else
+            yPosition -= MAGIC_CONST_Y * yGyro * (time / 1000) / 1000;
+        printf("Y : %lf\n", yPosition);
+        return;
+    }
+
+    if (pos == 'Z')
+    {
+        reg[0] = 0x2C;
+        write(file, reg, 1);
+        read(file, data, 1);
+        char data_0 = data[0];
+        reg[0] = 0x2D;
+        write(file, reg, 1);
+        read(file, data, 1);
+        char data_1 = data[0];
+        int16_t zGyro = (data_1 << 8 | data_0);
+        if (zGyro < MIN_VAL && zGyro > -MIN_VAL)
+            zGyro = 0;
+        if (zGyro > 32767)
+            zGyro -= 65536;
+        if ((zGyro & 0x8000) == 0)
+            zSign = 0;
+        else
+        {
+            zSign = 1;
+            zGyro &= 0x7FFF;
+            zGyro = 0x8000 - zGyro;
+        }
+        if (zSign == 0)
+            zPosition += MAGIC_CONST_Z * zGyro * (time / 1000) / 1000;
+        else
+            zPosition -= MAGIC_CONST_Z * zGyro * (time / 1000) / 1000;
+        printf("Z : %lf\n", zPosition);
+        return;
+    }
+}
+
+void help()
+{
+    printf("    Use this application for reading from gyroscope\n");
+    printf("    execute format: ./gyro [-h][-t][-g] \n");
+    printf("    [-h] return: help\n");
+    printf("    [-t] return: gyroscope deflection angle in X,Y,Z\n");
+    printf("    [-g] return: device temperature change in C deg\n");
+}
+
+int main(int argc, char *argv[])
+{
+    int state = 0;
+    if (argc > 1)
+    {
+        if ((strcmp(argv[1], "-h") == 0))
+        {
+            help();
+            return 0;
+        }
+        else if ((strcmp(argv[1], "-t") == 0))
+        {
+            state = 1;
+        }
+        else if ((strcmp(argv[1], "-g") == 0))
+        {
+            state = 2;
         }
         else
         {
-            xPosition -= 0.07 * xGyro * 0.02;
+            help();
+            return 0;
         }
-    */
-    // Output data to screen
-    double dpsX = xGyro * 0.068;
-    double dpsY = yGyro * 0.068;
-    double dpsZ = zGyro * 0.068;
+    }
+    else
+    {
+        help();
+        return 0;
+    }
 
-    // printf("Rotation in X-Axis : %d \n", xGyro);
-    // printf("Rotation in Y-Axis : %d \n", (int)dpsY);
-    // printf("Rotation in Z-Axis : %d \n", (int)dpsZ);
-    printf("X : %lf\tY : %d\tZ : %d\t \n", dpsX, dpsY, dpsZ);
-}
-
-void main()
-{
-    // Create I2C bus
+    //
     int file;
-    char *bus = "/dev/i2c-1";
+    char *bus = I2C;
     if ((file = open(bus, O_RDWR)) < 0)
     {
         printf("Failed to open the bus. \n");
         exit(1);
     }
-    // Get I2C device, L3G4200D I2C address is 0x68(104)
+    // Подключение по I2C. Адрес - 0x69
     ioctl(file, I2C_SLAVE, 0x69);
-
-    // Enable X, Y, Z-Axis and disable Power down mode(0x0F)
+    // Включить оси X, Y, Z и отключить режим отключения питания (0x0F)
     char config[2] = {0};
     config[0] = 0x20;
     config[1] = 0x0F;
     write(file, config, 2);
-    // Full scale range, 2000 dps(0x30)
+    // Настройка диапазона измерения запись произвести в config[1]
+    //		            2000 dps(0x30/0x20)
+    //                  500 dps(0x10)
+    //                  250 dps(0x20)
     config[0] = 0x23;
-    config[1] = 0x00;
+    config[1] = 0x30; // 2000 dps
     write(file, config, 2);
     sleep(1);
 
     system("clear");
-    while (1)
-    {
-        askGiro(file);
-        usleep(20000);
-    }
+    if (state == 1)
+        while (1)
+        {
+            system("clear");
+            askTemp(file);
+            usleep(TIME * 1000);
+        }
+    if (state == 2)
+        while (1)
+        {
+            system("clear");
+            askGiro(file, 'X', TIME);
+            askGiro(file, 'Y', TIME);
+            askGiro(file, 'Z', TIME);
+            usleep(TIME * 1000);
+        }
+
     return 0;
 }
