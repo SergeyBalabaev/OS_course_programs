@@ -1,7 +1,9 @@
 # Программа для работы с дальномером hc-sr04
 
 Сборка:  
+```
 gcc rangefinder.c -o rangefinder -Wall  
+```
 
 Запуск:  
 sudo ./rangefinder [-h][-q] N  
@@ -10,5 +12,6 @@ sudo ./rangefinder [-h][-q] N
 N - период вывода значений в мс  
 
 Пример:  
+```
 sudo ./rangefinder -q 1000 //Вывод значений один раз в секунду в "тихом режиме"
- 
+```
