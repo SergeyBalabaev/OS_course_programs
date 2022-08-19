@@ -1,7 +1,9 @@
 # Программа для работы с дальномером hc-sr04
 
 Сборка:  
+```
 gcc rangefinder.c -o rangefinder -Wall  
+```
 
 Запуск:  
 sudo ./rangefinder [-h][-q] N  
