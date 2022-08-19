@@ -1,7 +1,9 @@
 # Программа для работы с фоторезистором
 
 Сборка:  
+```
 g++ light_detect.cpp Adafruit_ADS1X15_RPi/Adafruit_ADS1015.cpp -o light_detect -lwiringPi  
+```
 
 Запуск:  
 sudo ./light_detect [-h][-q] N  
@@ -13,5 +15,6 @@ N - период вывода значений в мс
 Значение отсчетов АЦП 
 
 Пример: 
+```
 sudo ./light_detect -q 1000 //Вывод значений один раз в секунду в "тихом режиме"
- 
+```
