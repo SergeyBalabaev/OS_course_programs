@@ -4,8 +4,8 @@
 #include <pigpio.h>
 #include "rotary_encoder.h"
 
-#define GPIO_PIN_A 18
-#define GPIO_PIN_B 23
+#define GPIO_PIN_A 27
+#define GPIO_PIN_B 26
 int quiet = 0;
 void help()
 {
