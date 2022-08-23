@@ -209,8 +209,14 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	if ((quiet && argc != 3) || (!quiet && argc != 2))
+	{
+		help();
+		return 0;
+	}
+
 	if (!quiet)
-		printf("\nThe rabgefinder application was started\n\n");
+		printf("\nThe rangefinder application was started\n\n");
 	char *mode = argv[1 + quiet];
 
 	if (strcmp(mode, "-s") == 0)
