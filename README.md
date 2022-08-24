@@ -9,7 +9,7 @@
 | Фоторезистор GL5516  | + | + |
 | Ультразвуковой дальномер HC-SR04  | + | + |
 | Ультразвуковой дальномер Pmod MAXSONAR  | - | - |
-| Color Sensor Module PN 410-348  | - | - |
+| Color Sensor Module PN 410-348  | + | + |
 | Энкодер Pmod ENC: Rotary Encoder PN 410-117  | + | + |
 | Дисплей MSP3521  | - | - |
 | Трехосевой гироскоп L3G4200D  | + | - |
