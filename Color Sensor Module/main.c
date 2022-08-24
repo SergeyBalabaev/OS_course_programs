@@ -4,8 +4,32 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
-int main()
+#include <string.h>
+
+void help()
 {
+    printf("    Use this application for Color sensor module\n");
+    printf("    execute format: ./ColorSens [-h] \n");
+    printf("    -h - help\n");
+    printf("    return: \n");
+    printf("    \tRed color luminance [lux]\n");
+    printf("    \tGreen color luminance [lux]\n");
+    printf("    \tBlue color luminance [lux]\n");
+    printf("    \tIR luminance [lux]\n");
+    printf("    \tAmbient Light Luminance [lux]\n");
+}
+
+int main(int argc, char *argv[])
+{
+
+    if (argc > 1)
+    {
+        if ((strcmp(argv[1], "-h") == 0))
+        {
+            help();
+            return 0;
+        }
+    }
     // Create I2C bus
     int file;
     char *bus = "/dev/i2c-1";

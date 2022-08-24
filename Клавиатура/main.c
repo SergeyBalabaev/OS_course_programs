@@ -69,7 +69,7 @@ char get_key()
 void help()
 {
     printf("    Use this application for keypad\n");
-    printf("    execute format: ./light_detect [-h][-q] \n");
+    printf("    execute format: ./light_detect [-h] \n");
     printf("    return: enter button\n");
     printf("    -h - help\n");
     printf("    -q - quiet\n");
