@@ -24,15 +24,13 @@ void Exiting(int);
 int read_pins_file(char *file)
 {
 	FILE *f = fopen(file, "r");
-	if (f == 0)
-	{
+	if (f == 0) {
 		fprintf(stderr, "ERROR: can't open %s file\n", file);
 		return -1;
 	}
 
 	char str[32];
-	while (!feof(f))
-	{
+	while (!feof(f)) {
 		if (fscanf(f, "%s\n", str))
 			printf("%s\n", str);
 		fflush(stdout);
@@ -43,8 +41,7 @@ int read_pins_file(char *file)
 	return 0;
 }
 
-static int
-GPIOExport(int pin)
+static int GPIOExport(int pin)
 {
 #define BUFFER_MAX 3
 	char buffer[BUFFER_MAX];
@@ -52,8 +49,7 @@ GPIOExport(int pin)
 	int fd;
 
 	fd = open("/sys/class/gpio/export", O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open export for writing!\n");
 		Exiting(-1);
 	}
@@ -64,16 +60,14 @@ GPIOExport(int pin)
 	return (0);
 }
 
-static int
-GPIOUnexport(int pin)
+static int GPIOUnexport(int pin)
 {
 	char buffer[BUFFER_MAX];
 	ssize_t bytes_written;
 	int fd;
 
 	fd = open("/sys/class/gpio/unexport", O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open unexport for writing!\n");
 		Exiting(-1);
 	}
@@ -84,8 +78,7 @@ GPIOUnexport(int pin)
 	return (0);
 }
 
-static int
-GPIODirection(int pin, int dir)
+static int GPIODirection(int pin, int dir)
 {
 	static const char s_directions_str[] = "in\0out";
 
@@ -95,14 +88,13 @@ GPIODirection(int pin, int dir)
 
 	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d/direction", pin);
 	fd = open(path, O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open gpio direction for writing!\n");
 		Exiting(-1);
 	}
 
-	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3))
-	{
+	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3],
+			IN == dir ? 2 : 3)) {
 		fprintf(stderr, "Failed to set direction!\n");
 		Exiting(-1);
 	}
@@ -111,8 +103,7 @@ GPIODirection(int pin, int dir)
 	return (0);
 }
 
-static int
-GPIORead(int pin)
+static int GPIORead(int pin)
 {
 #define VALUE_MAX 30
 	char path[VALUE_MAX];
@@ -121,14 +112,12 @@ GPIORead(int pin)
 
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_RDONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open gpio value for reading!\n");
 		Exiting(-1);
 	}
 
-	if (-1 == read(fd, value_str, 3))
-	{
+	if (-1 == read(fd, value_str, 3)) {
 		fprintf(stderr, "Failed to read value!\n");
 		Exiting(-1);
 	}
@@ -138,8 +127,7 @@ GPIORead(int pin)
 	return (atoi(value_str));
 }
 
-static int
-GPIOWrite(int pin, int value)
+static int GPIOWrite(int pin, int value)
 {
 	static const char s_values_str[] = "01";
 
@@ -148,14 +136,12 @@ GPIOWrite(int pin, int value)
 
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open gpio value for writing!\n");
 		Exiting(-1);
 	}
 
-	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1))
-	{
+	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1)) {
 		fprintf(stderr, "Failed to write value!\n");
 		Exiting(-1);
 	}
@@ -180,7 +166,6 @@ void Exiting_sig()
 
 void help()
 {
-
 	printf("    Use this application for reading from rangefinder\n");
 	printf("    execute format: ./range TIME \n");
 	printf("    return: length in cm\n");
@@ -191,26 +176,19 @@ void help()
 
 int main(int argc, char *argv[])
 {
-
 	int quiet = 0;
-	if (argc > 1)
-	{
-		if ((strcmp(argv[1], "-h") == 0))
-		{
+	if (argc > 1) {
+		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
-		}
-		else
-		{
-			if ((strcmp(argv[1], "-q") == 0))
-			{
+		} else {
+			if ((strcmp(argv[1], "-q") == 0)) {
 				quiet = 1;
 			}
 		}
 	}
 
-	if ((quiet && argc != 3) || (!quiet && argc != 2))
-	{
+	if ((quiet && argc != 3) || (!quiet && argc != 2)) {
 		help();
 		return 0;
 	}
@@ -219,11 +197,9 @@ int main(int argc, char *argv[])
 		printf("\nThe rangefinder application was started\n\n");
 	char *mode = argv[1 + quiet];
 
-	if (strcmp(mode, "-s") == 0)
-	{
+	if (strcmp(mode, "-s") == 0) {
 		char data[32];
-		while (1)
-		{
+		while (1) {
 			scanf("%s", data);
 			fflush(stdin);
 			printf("%s\n", data);
@@ -231,8 +207,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (strcmp(mode, "-f") == 0)
-	{
+	if (strcmp(mode, "-f") == 0) {
 		char *file = argv[2 + quiet];
 		if (read_pins_file(file) < 0)
 			return -1;
@@ -252,18 +227,14 @@ int main(int argc, char *argv[])
 		argument++;
 
 	double sl;
-	while (1)
-	{
-
+	while (1) {
 		GPIOWrite(TRIG, 1);
 		usleep(10);
 		GPIOWrite(TRIG, 0);
-		while (!GPIORead(ECHO))
-		{
+		while (!GPIORead(ECHO)) {
 		}
 		double start_time = clock();
-		while (GPIORead(ECHO))
-		{
+		while (GPIORead(ECHO)) {
 		}
 		double end_time = clock();
 		search_time = end_time - start_time;

@@ -10,18 +10,12 @@
 
 #define SERIALPORT "/dev/ttyAMA1"
 
-typedef enum
-{
-	INCH = 0,
-	CM,
-	MM
-} UNIT;
+typedef enum { INCH = 0, CM, MM } UNIT;
 
 uint16_t getUnits(uint16_t data, UNIT unit)
 {
 	float output;
-	switch (unit)
-	{
+	switch (unit) {
 	case INCH:
 		output = data;
 		break;
@@ -44,27 +38,20 @@ uint16_t getDistance(int serial_port, UNIT unit)
 	int i = 0;
 	uint16_t data = 0;
 	char rgbTemp[3];
-	if (serialGetchar(serial_port))
-	{
-		if (serialGetchar(serial_port) == 'R')
-		{
-			for (i = 0; i < 3; i++)
-			{
+	if (serialGetchar(serial_port)) {
+		if (serialGetchar(serial_port) == 'R') {
+			for (i = 0; i < 3; i++) {
 				while (!serialDataAvail(serial_port))
 					;
 				rgbTemp[i] = serialGetchar(serial_port);
 			}
-			if (serialGetchar(serial_port) == 13)
-			{ // check for return character
+			if (serialGetchar(serial_port) ==
+			    13) { // check for return character
 				data = atoi(rgbTemp);
-			}
-			else
-			{
+			} else {
 				data = 0; // packet error
 			}
-		}
-		else
-		{
+		} else {
 			data = 0; // packet error
 		}
 	}
@@ -73,7 +60,6 @@ uint16_t getDistance(int serial_port, UNIT unit)
 
 void help()
 {
-
 	printf("    Use this application for reading from rangefinder\n");
 	printf("    execute format: ./range TIME \n");
 	printf("    return: length in cm\n");
@@ -84,34 +70,23 @@ void help()
 
 int main(int argc, char *argv[])
 {
-
 	int quiet = 0;
 	int sl = 100;
-	if (argc == 2)
-	{
-		if ((strcmp(argv[1], "-h") == 0))
-		{
+	if (argc == 2) {
+		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
-		}
-		else
+		} else
 			sl = atoi(argv[1]);
-	}
-	else if (argc == 3)
-	{
-		if ((strcmp(argv[1], "-q") == 0))
-		{
+	} else if (argc == 3) {
+		if ((strcmp(argv[1], "-q") == 0)) {
 			quiet = 1;
 			sl = atoi(argv[2]);
-		}
-		else
-		{
+		} else {
 			help();
 			return 0;
 		}
-	}
-	else
-	{
+	} else {
 		help();
 		return 0;
 	}
@@ -120,24 +95,27 @@ int main(int argc, char *argv[])
 		printf("\nThe rangefinder application was started\n\n");
 	int serial_port;
 	char dat;
-	if ((serial_port = serialOpen(SERIALPORT, 9600)) < 0) /* open serial port */
+	if ((serial_port = serialOpen(SERIALPORT, 9600)) <
+	    0) /* open serial port */
 	{
-		fprintf(stderr, "Unable to open serial device: %s\n", strerror(errno));
+		fprintf(stderr, "Unable to open serial device: %s\n",
+			strerror(errno));
 		return 1;
 	}
 
 	if (wiringPiSetup() == -1) /* initializes wiringPi setup */
 	{
-		fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
+		fprintf(stdout, "Unable to start wiringPi: %s\n",
+			strerror(errno));
 		return 1;
 	}
 	if (!quiet)
-		while (1)
-		{
+		while (1) {
 			{
-				if (serialDataAvail(serial_port))
-				{
-					dat = getDistance(serial_port, CM); /* receive character serially*/
+				if (serialDataAvail(serial_port)) {
+					dat = getDistance(
+						serial_port,
+						CM); /* receive character serially*/
 					if (dat != 0)
 						printf("Length = %d cm\n", dat);
 				}
@@ -148,12 +126,12 @@ int main(int argc, char *argv[])
 				sleep(1);
 		}
 	else
-		while (1)
-		{
+		while (1) {
 			{
-				if (serialDataAvail(serial_port))
-				{
-					dat = getDistance(serial_port, CM); /* receive character serially*/
+				if (serialDataAvail(serial_port)) {
+					dat = getDistance(
+						serial_port,
+						CM); /* receive character serially*/
 					if (dat != 0)
 						printf("%d\n", dat);
 				}

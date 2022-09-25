@@ -9,7 +9,6 @@
 int quiet = 0;
 void help()
 {
-
 	printf("    Use this application for reading from encoder\n");
 	printf("    execute format: ./light_detect [-h][-q] \n");
 	printf("    return: increment value, when rotate right\n");
@@ -23,25 +22,19 @@ void callback(int way)
 	static int pos = 0;
 	pos += way;
 	if (!quiet)
-		printf("Position=%d\n", pos);
+		printf("angle increment:=%d\n", pos);
 	if (quiet)
 		printf("%d\n", pos);
 }
 
 int main(int argc, char *argv[])
 {
-
-	if (argc > 1)
-	{
-		if ((strcmp(argv[1], "-h") == 0))
-		{
+	if (argc > 1) {
+		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
-		}
-		else
-		{
-			if ((strcmp(argv[1], "-q") == 0))
-			{
+		} else {
+			if ((strcmp(argv[1], "-q") == 0)) {
 				quiet = 1;
 			}
 		}

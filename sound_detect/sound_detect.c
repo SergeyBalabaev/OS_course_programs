@@ -19,8 +19,7 @@
 //***************************//
 
 void Exiting(int);
-static int
-GPIOExport(int pin)
+static int GPIOExport(int pin)
 {
 #define BUFFER_MAX 3
 	char buffer[BUFFER_MAX];
@@ -28,8 +27,7 @@ GPIOExport(int pin)
 	int fd;
 
 	fd = open("/sys/class/gpio/export", O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open export for writing!\n");
 		Exiting(-1);
 	}
@@ -40,16 +38,14 @@ GPIOExport(int pin)
 	return (0);
 }
 
-static int
-GPIOUnexport(int pin)
+static int GPIOUnexport(int pin)
 {
 	char buffer[BUFFER_MAX];
 	ssize_t bytes_written;
 	int fd;
 
 	fd = open("/sys/class/gpio/unexport", O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open unexport for writing!\n");
 		Exiting(-1);
 	}
@@ -60,8 +56,7 @@ GPIOUnexport(int pin)
 	return (0);
 }
 
-static int
-GPIODirection(int pin, int dir)
+static int GPIODirection(int pin, int dir)
 {
 	static const char s_directions_str[] = "in\0out";
 
@@ -71,14 +66,13 @@ GPIODirection(int pin, int dir)
 
 	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d/direction", pin);
 	fd = open(path, O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open gpio direction for writing!\n");
 		Exiting(-1);
 	}
 
-	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3))
-	{
+	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3],
+			IN == dir ? 2 : 3)) {
 		fprintf(stderr, "Failed to set direction!\n");
 		Exiting(-1);
 	}
@@ -87,8 +81,7 @@ GPIODirection(int pin, int dir)
 	return (0);
 }
 
-static int
-GPIORead(int pin)
+static int GPIORead(int pin)
 {
 #define VALUE_MAX 30
 	char path[VALUE_MAX];
@@ -97,14 +90,12 @@ GPIORead(int pin)
 
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_RDONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open gpio value for reading!\n");
 		Exiting(-1);
 	}
 
-	if (-1 == read(fd, value_str, 3))
-	{
+	if (-1 == read(fd, value_str, 3)) {
 		fprintf(stderr, "Failed to read value!\n");
 		Exiting(-1);
 	}
@@ -114,8 +105,7 @@ GPIORead(int pin)
 	return (atoi(value_str));
 }
 
-static int
-GPIOWrite(int pin, int value)
+static int GPIOWrite(int pin, int value)
 {
 	static const char s_values_str[] = "01";
 
@@ -124,14 +114,12 @@ GPIOWrite(int pin, int value)
 
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_WRONLY);
-	if (-1 == fd)
-	{
+	if (-1 == fd) {
 		fprintf(stderr, "Failed to open gpio value for writing!\n");
 		Exiting(-1);
 	}
 
-	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1))
-	{
+	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1)) {
 		fprintf(stderr, "Failed to write value!\n");
 		Exiting(-1);
 	}
@@ -142,7 +130,6 @@ GPIOWrite(int pin, int value)
 
 void help()
 {
-
 	printf("    Use this application for reading from sound sensor\n");
 	printf("    execute format: ./sound_detect [-h][-q] \n");
 	printf("    return: 'Clap!', when sound detected\n");
@@ -167,13 +154,10 @@ int main(int argc, char *argv[])
 	signal(SIGINT, Exiting_sig);
 	int quiet = 0;
 	if (argc > 1)
-		if ((strcmp(argv[1], "-h") == 0))
-		{
+		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
-		}
-		else
-		{
+		} else {
 			if ((strcmp(argv[1], "-q") == 0))
 				quiet = 1;
 		}
@@ -186,11 +170,9 @@ int main(int argc, char *argv[])
 	sleep(0.05);
 	int prev, next;
 	prev = 0;
-	while (1)
-	{
+	while (1) {
 		next = GPIORead(GPIO_PIN);
-		if (prev < next)
-		{
+		if (prev < next) {
 			printf("Clap!\n");
 			usleep(10000);
 		}

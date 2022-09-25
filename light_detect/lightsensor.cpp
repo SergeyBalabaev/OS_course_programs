@@ -9,8 +9,8 @@
 
 #include "./Adafruit_ADS1X15_RPi/Adafruit_ADS1015.h"
 
-#define err(mess)                            \
-	{                                        \
+#define err(mess)                                    \
+	{                                            \
 		fprintf(stderr, "Error: %s.", mess); \
 		exit(1);                             \
 	}
@@ -24,7 +24,6 @@ Adafruit_ADS1115 ads;
 
 void help()
 {
-
 	printf("    Use this application for reading from light sensor\n");
 	printf("    execute format: ./light_detect [-h][-q] TIME \n");
 	printf("    return: ADC value, where 0 - minimum light, 65535 - maximum light\n");
@@ -36,22 +35,15 @@ void help()
 int main(int argc, char *argv[])
 {
 	int quiet = 0;
-	if (argc <= 1)
-	{
+	if (argc <= 1) {
 		help();
 		return -1;
-	}
-	else
-	{
-		if ((strcmp(argv[1], "-h") == 0))
-		{
+	} else {
+		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
-		}
-		else
-		{
-			if ((strcmp(argv[1], "-q") == 0))
-			{
+		} else {
+			if ((strcmp(argv[1], "-q") == 0)) {
 				quiet = 1;
 			}
 		}
@@ -65,8 +57,7 @@ int main(int argc, char *argv[])
 	if (quiet)
 		argument++;
 	uint16_t pause_time = atoi(argv[argument]);
-	while (true)
-	{
+	while (true) {
 		adc0 = ads.readADC_SingleEnded(ADC_PIN);
 		if (quiet)
 			printf("%d\n", adc0);
