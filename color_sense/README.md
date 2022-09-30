@@ -2,9 +2,9 @@
 
 Сборка:  
 ```
-gcc main.c -o ColorSens -Wall  
+gcc main.c -o color_sense -Wall  
 ```
 
 Запуск:  
-sudo ./ColorSens [-h]
+sudo ./color_sense [-h]
 -h - описание работы  

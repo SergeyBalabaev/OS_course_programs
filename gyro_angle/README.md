@@ -2,11 +2,11 @@
 
 Сборка:  
 ```
-gcc main.c -o gyro -Wall  
+gcc main.c -o gyro_angle -Wall  
 ```
 
 Запуск:  
-sudo ./gyro [-h][-t][-g]  
+sudo ./gyro_angle [-h][-t][-g]  
 -h - описание работы  
 -t - вывод изменения температуры кристалла  
 -g - вывод значений положения гироскопа  

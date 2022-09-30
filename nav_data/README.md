@@ -12,11 +12,11 @@ LD_LIBRARY_PATH=lib ./LSM9DS1_Basic_I2C
 
 Сборка:  
 ```
-gcc -Wall -O2 example/main.c -o PmodNav -llsm9ds1 -lm  
+gcc -Wall -O2 example/main.c -o nav_data -llsm9ds1 -lm  
 ```
 
 Запуск:  
-./PmodNav [-h][-b][-g][-a][-m]  
+./nav_data [-h][-b][-g][-a][-m]  
 -h - описание работы  
 -b - вывод показаний барометра  [мм.рт.ст.]  
 -g - вывод показаний гироскопа  [градусы]  

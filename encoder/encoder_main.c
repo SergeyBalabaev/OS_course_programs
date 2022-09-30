@@ -22,7 +22,7 @@ void callback(int way)
 	static int pos = 0;
 	pos += way;
 	if (!quiet)
-		printf("angle increment:=%d\n", pos);
+		printf("increment:%d\n", pos);
 	if (quiet)
 		printf("%d\n", pos);
 }

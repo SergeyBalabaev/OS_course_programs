@@ -2,7 +2,7 @@
 
 Сборка:  
 ``` 
-g++ MFRC522.cpp main.cpp -std=c++11 -lbcm2835 -o prog   
+g++ MFRC522.cpp main.cpp -std=c++11 -lbcm2835 -o rfid_reader   
 ``` 
 
 Для корректной работы устройства необходимо установить стороннюю библиотеку:  
@@ -17,7 +17,7 @@ g++ MFRC522.cpp main.cpp -std=c++11 -lbcm2835 -o prog
 
 Пример работы: 
 ```   
- sudo ./prog
+ sudo ./rfid_reader
 ```  
 Enter your choice:  
         1: Print UID  

@@ -2,11 +2,11 @@
 
 Сборка: 
 ``` 
-gcc -o steppermotor steppermotor.c -lpigpio  
+gcc -o step_motor steppermotor.c -lpigpio  
 ```
 
 Запуск:  
-sudo ./steppermotor [-h][-q] T Angle  
+sudo ./step_motor [-h][-q] T Angle  
 -h - описание работы  
 -q - тихий режим  
 T - время задержки (мксек) -> 1/T - скорость вращения двигателя (об/сек)  

@@ -2,16 +2,16 @@
 
 Сборка:  
 ```
-gcc rangefinder.c -o rangefinder -Wall  
+gcc rangefinder.c -o rangefinder_gp2y -Wall  
 ```
 
 Запуск:  
-sudo ./rangefinder [-h][-q] N  
+sudo ./rangefinder_gp2y [-h][-q] N  
 -h - описание работы  
 -q - тихий режим, выводится только расстояние до объекта  
 N - период вывода значений в мс  
 
 Пример:  
 ```
-sudo ./rangefinder -q 1000 //Вывод значений один раз в секунду в "тихом режиме"
+sudo ./rangefinder_gp2y -q 1000 //Вывод значений один раз в секунду в "тихом режиме"
 ```
