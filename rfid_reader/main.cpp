@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 			continue;
 
 		if (quiet) {
-			PrintUID(mfrc);
+			printf("read ok!");
 			usleep(1000000);
 		} else {
 			printf("Enter your choice:\n");
