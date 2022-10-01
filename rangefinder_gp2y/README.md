@@ -2,7 +2,7 @@
 
 Сборка:  
 ```
-gcc rangefinder.c -o rangefinder_gp2y -Wall  
+gcc rangefinder_gp2y.c -o rangefinder_gp2y -Wall  
 ```
 
 Запуск:  

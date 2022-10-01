@@ -12,7 +12,7 @@ LD_LIBRARY_PATH=lib ./LSM9DS1_Basic_I2C
 
 Сборка:  
 ```
-gcc -Wall -O2 example/main.c -o nav_data -llsm9ds1 -lm  
+gcc -Wall -O2 example/nav_data.c -o nav_data -llsm9ds1 -lm  
 ```
 
 Запуск:  

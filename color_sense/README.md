@@ -2,7 +2,7 @@
 
 Сборка:  
 ```
-gcc main.c -o color_sense -Wall  
+gcc color_sense.c -o color_sense -Wall  
 ```
 
 Запуск:  

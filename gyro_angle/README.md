@@ -2,7 +2,7 @@
 
 Сборка:  
 ```
-gcc main.c -o gyro_angle -Wall  
+gcc gyro_angle.c -o gyro_angle -Wall  
 ```
 
 Запуск:  

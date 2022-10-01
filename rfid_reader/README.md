@@ -2,7 +2,7 @@
 
 Сборка:  
 ``` 
-g++ MFRC522.cpp main.cpp -std=c++11 -lbcm2835 -o rfid_reader   
+g++ MFRC522.cpp rfid_reader.cpp -std=c++11 -lbcm2835 -o rfid_reader   
 ``` 
 
 Для корректной работы устройства необходимо установить стороннюю библиотеку:  

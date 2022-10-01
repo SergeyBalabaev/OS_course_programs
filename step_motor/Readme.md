@@ -2,7 +2,7 @@
 
 Сборка: 
 ``` 
-gcc -o step_motor steppermotor.c -lpigpio  
+gcc -o step_motor step_motor.c -lpigpio  
 ```
 
 Запуск:  
