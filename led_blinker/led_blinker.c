@@ -15,7 +15,7 @@
 #define HIGH 1
 
 //***************************//
-#define LEDR 23
+#define LEDR 24
 #define LEDY 10
 #define LEDG 9
 //***************************//

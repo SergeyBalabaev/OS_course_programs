@@ -12,10 +12,10 @@
 */
 
 //***************************//
-#define Pin1 14
-#define Pin2 15
-#define Pin3 17
-#define Pin4 18
+#define Pin1 8
+#define Pin2 11
+#define Pin3 26
+#define Pin4 27
 //***************************//
 
 int step = 0;

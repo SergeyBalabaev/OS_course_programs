@@ -15,7 +15,7 @@
 #define HIGH 1
 
 //***************************//
-#define GPIO_PIN 27
+#define GPIO_PIN 8
 //***************************//
 
 void Exiting(int);

@@ -2,7 +2,7 @@
 
 Сборка:  
 ```
-gcc rangefinder.c -o rangefinder_hcsr04 -Wall  
+gcc rangefinder_hcsr04.c -o rangefinder_hcsr04 -Wall  
 ```
 
 Запуск:  

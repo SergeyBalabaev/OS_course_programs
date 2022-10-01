@@ -15,8 +15,8 @@
 #define HIGH 1
 
 //***************************//
-#define TRIG 21 // GPIO PIN TRIG
-#define ECHO 20 // GPIO PIN ECHO
+#define TRIG 8 // GPIO PIN TRIG
+#define ECHO 11 // GPIO PIN ECHO
 //***************************//
 
 void Exiting(int);
