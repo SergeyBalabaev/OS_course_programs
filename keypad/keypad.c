@@ -6,8 +6,12 @@
 #define COLS 3
 
 char pressedKey = '\0';
-int rowPins[ROWS] = { 7, 6, 14, 10 }; // 4, 25, 11, 8; R3, R2, R1, R0
-int colPins[COLS] = { 11, 22, 21 }; // 7 ,6, 5; C2, C1, C0
+
+//int rowPins[ROWS] = { 6, 27, 0, 1 }; // 25, 16, 17, 18; R3, R2, R1, R0
+//int colPins[COLS] = { 24, 29, 28 }; // 19 ,21, 20; C2, C1, C0
+
+int rowPins[ROWS] = { 10, 14, 6, 7 }; // 8, 11, 25, 4; R3, R2, R1, R0
+int colPins[COLS] = { 21, 22, 26 }; // 5 ,6, 7; C2, C1, C0
 
 char keys[ROWS][COLS] = { { '1', '2', '3' },
 			  { '4', '5', '6' },
