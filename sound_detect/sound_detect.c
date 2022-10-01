@@ -105,29 +105,6 @@ static int GPIORead(int pin)
 	return (atoi(value_str));
 }
 
-static int GPIOWrite(int pin, int value)
-{
-	static const char s_values_str[] = "01";
-
-	char path[VALUE_MAX];
-	int fd;
-
-	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
-	fd = open(path, O_WRONLY);
-	if (-1 == fd) {
-		fprintf(stderr, "Failed to open gpio value for writing!\n");
-		Exiting(-1);
-	}
-
-	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1)) {
-		fprintf(stderr, "Failed to write value!\n");
-		Exiting(-1);
-	}
-
-	close(fd);
-	return (0);
-}
-
 void help()
 {
 	printf("    Use this application for reading from sound sensor\n");
@@ -153,7 +130,7 @@ int main(int argc, char *argv[])
 {
 	signal(SIGINT, Exiting_sig);
 	int quiet = 0;
-	if (argc > 1)
+	if (argc > 1){
 		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
@@ -161,7 +138,7 @@ int main(int argc, char *argv[])
 			if ((strcmp(argv[1], "-q") == 0))
 				quiet = 1;
 		}
-
+	}
 	if (!quiet)
 		printf("\nThe soundsensor application was started\n\n");
 

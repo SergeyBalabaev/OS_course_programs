@@ -19,6 +19,7 @@
 #define LEDY 10
 #define LEDG 9
 //***************************//
+#define VALUE_MAX 30
 
 void Exiting(int);
 
@@ -84,29 +85,7 @@ static int GPIODirection(int pin, int dir)
 	return (0);
 }
 
-static int GPIORead(int pin)
-{
-#define VALUE_MAX 30
-	char path[VALUE_MAX];
-	char value_str[3];
-	int fd;
 
-	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
-	fd = open(path, O_RDONLY);
-	if (-1 == fd) {
-		fprintf(stderr, "Failed to open gpio value for reading!\n");
-		Exiting(-1);
-	}
-
-	if (-1 == read(fd, value_str, 3)) {
-		fprintf(stderr, "Failed to read value!\n");
-		Exiting(-1);
-	}
-
-	close(fd);
-
-	return (atoi(value_str));
-}
 
 static int GPIOWrite(int pin, int value)
 {
@@ -178,7 +157,6 @@ int main(int argc, char *argv[])
 
 	if (!quiet)
 		printf("\nThe led blinker application was started\n\n");
-	char *mode = argv[1 + quiet];
 	int argument = 1;
 	if (quiet)
 		argument++;
