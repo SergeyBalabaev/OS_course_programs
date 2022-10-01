@@ -21,7 +21,7 @@
 #define MAGIC_CONST_Z (SENSITIVITY_2000 * 2)
 
 // адрес шины i2c
-#define I2C "/dev/i2c-0"
+#define I2C "/dev/i2c-1"
 
 // время опроса (ms)
 #define TIME 10.0
@@ -154,8 +154,8 @@ void help()
 	printf("    Use this application for reading from gyroscope\n");
 	printf("    execute format: ./gyro [-h][-t][-g] \n");
 	printf("    [-h] return: help\n");
-	printf("    [-t] return: gyroscope deflection angle in X,Y,Z\n");
-	printf("    [-g] return: device temperature change in C deg\n");
+	printf("    [-g] return: gyroscope deflection angle in X,Y,Z\n");
+	printf("    [-t] return: device temperature change in C deg\n");
 }
 
 int main(int argc, char *argv[])
