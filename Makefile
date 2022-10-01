@@ -1,6 +1,5 @@
 all:
 	gcc color_sense/color_sense.c -o color_sense/color_sense -Wall
-	gcc encoder/encoder_angle.c encoder/rotary_encoder.c -o encoder/encoder_angle -lpigpio -Wall
 	gcc gyro_angle/gyro_angle.c -o gyro_angle/gyro_angle -Wall
 	gcc keypad/keypad.c -o keypad/keypad -lwiringPi -Wall
 	gcc led_blinker/led_blinker.c -o led_blinker/led_blinker -Wall
