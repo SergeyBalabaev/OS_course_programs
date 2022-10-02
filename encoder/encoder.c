@@ -21,18 +21,36 @@
  * OTHER DEALINGS IN THE SOFTWARE.                                             *
  ******************************************************************************/
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
+#include <pigpio.h>
+#include "rotary_encoder.h"
 
-void help(); 
+#define GPIO_PIN_A 4
+#define GPIO_PIN_B 7
+int quiet = 0;
+void help()
+{
+	printf("    Use this application for reading from encoder\n");
+	printf("    execute format: ./light_detect [-h][-q] \n");
+	printf("    return: increment value, when rotate right\n");
+	printf("            decrement value, when rotate left\n");
+	printf("    -h - help\n");
+	printf("    -q - quiet\n");
+}
+
+void callback(int way)
+{
+	static int pos = 0;
+	pos += way;
+	if (!quiet)
+		printf("increment:%d\n", pos);
+	if (quiet)
+		printf("%d\n", pos);
+}
+
 int main(int argc, char *argv[])
 {
-	int quiet = 0;
-
 	if (argc > 1) {
 		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
@@ -44,51 +62,13 @@ int main(int argc, char *argv[])
 		}
 	}
 	if (!quiet)
-		printf("\nThe Notes application was started\n\n");
+		printf("\nThe encoder application was started\n\n");
 
-	char buf[2];
-	while (1) {
-		scanf("%s", buf);
-		if ((buf[0] == 'A') && (buf[1] != '#'))
-			system("aplay ./A4.wav -q");
-		if (buf[0] == 'B')
-			system("aplay ./B4.wav -q");
-		if ((buf[0] == 'C') && (buf[1] != '#'))
-			system("aplay ./C4.wav -q");
-		if ((buf[0] == 'D') && (buf[1] != '#'))
-			system("aplay ./D4.wav -q");
-		if (buf[0] == 'E')
-			system("aplay ./E4.wav -q");
-		if ((buf[0] == 'F') && (buf[1] != '#'))
-			system("aplay ./F4.wav -q");
-		if ((buf[0] == 'G') && (buf[1] != '#'))
-			system("aplay ./G4.wav -q");
-		if ((buf[0] == 'A') && (buf[1] == '#'))
-			system("aplay ./Ad4.wav -q");
-		if ((buf[0] == 'C') && (buf[1] == '#'))
-			system("aplay ./Cd4.wav -q");
-		if ((buf[0] == 'D') && (buf[1] == '#'))
-			system("aplay ./Dd4.wav -q");
-		if ((buf[0] == 'F') && (buf[1] == '#'))
-			system("aplay ./Fd4.wav -q");
-		if ((buf[0] == 'G') && (buf[1] == '#'))
-			system("aplay ./Gd4.wav -q");
-	}
-
-	return 0;
-}
-
-void help()
-{
-	printf("    Use this application for plaing notes\n");
-	printf("    execute format: ./notes\n");
-	printf("    -h - help\n");
-	printf("    -q - quiet\n");
-	printf("    input format (from stdin):\n");
-	printf("        NOTE\n");
-	printf("    NOTE - note name in scientific pitch notation\n");
-	printf("    Example:\n");
-	printf("    ./notes -q\n");
-	printf("    A\n");
-	printf("    playing A\n");
+	Pi_Renc_t *renc;
+	if (gpioInitialise() < 0)
+		return 1;
+	renc = Pi_Renc(GPIO_PIN_A, GPIO_PIN_B, callback);
+	sleep(300);
+	Pi_Renc_cancel(renc);
+	gpioTerminate();
 }
