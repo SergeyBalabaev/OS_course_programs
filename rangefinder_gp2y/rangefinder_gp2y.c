@@ -21,7 +21,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.                                             *
  ******************************************************************************/
 
-
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
@@ -30,7 +29,7 @@
 #include <wiringPi.h>
 #include <ads1115.h>
 
-#define	AD_BASE 122
+#define AD_BASE 122
 #define AD_ADDR 0x48
 
 void help()
@@ -43,11 +42,12 @@ void help()
 	printf("    -q - quiet\n");
 }
 
-int clamp(int x, int min, int max) {
-    return (x < min) ? min : ((x > max) ? max : x);
+int clamp(int x, int min, int max)
+{
+	return (x < min) ? min : ((x > max) ? max : x);
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
 	int quiet = 0;
 	if (argc > 1) {
@@ -72,27 +72,29 @@ int main(int argc, char *argv[])
 	int argument = 1;
 	if (quiet)
 		argument++;
-    int delay_ms = atoi(argv[argument]);
+	int delay_ms = atoi(argv[argument]);
 
-    wiringPiSetup();
-    ads1115Setup(AD_BASE, AD_ADDR);
-    digitalWrite(AD_BASE, 0);
+	wiringPiSetup();
+	ads1115Setup(AD_BASE, AD_ADDR);
+	digitalWrite(AD_BASE, 0);
 
-    while(1) {
-        float voltage = ((float)analogRead(AD_BASE+2) * 0.1875 / 1000.0);
-        
-        // Power regression approximation
-        // Distance is clamped between 20 and 150 cm
-        int distance = clamp(round(61.3894*pow(voltage, -1.1076)), 20, 150);
+	while (1) {
+		float voltage =
+			((float)analogRead(AD_BASE + 2) * 0.1875 / 1000.0);
+
+		// Power regression approximation
+		// Distance is clamped between 20 and 150 cm
+		int distance =
+			clamp(round(61.3894 * pow(voltage, -1.1076)), 20, 150);
 
 		if (!quiet)
 			printf("Length = %d cm\n", distance);
 		else
 			printf("%d\n", distance);
 
-        fflush(stdout);
-        usleep(1000 * delay_ms);
-    }
+		fflush(stdout);
+		usleep(1000 * delay_ms);
+	}
 
-    return 0;
+	return 0;
 }

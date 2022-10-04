@@ -38,8 +38,8 @@
 #define HIGH 1
 
 //***************************//
-#define TRIG 8 // GPIO PIN TRIG
-#define ECHO 11 // GPIO PIN ECHO
+#define TRIG 11 // GPIO PIN TRIG
+#define ECHO 8 // GPIO PIN ECHO
 //***************************//
 
 void Exiting(int);
@@ -197,6 +197,8 @@ void help()
 	printf("    -q - quiet\n");
 }
 
+#define TIMEOUT_SEC 2
+
 int main(int argc, char *argv[])
 {
 	int quiet = 0;
@@ -257,7 +259,18 @@ int main(int argc, char *argv[])
 		while (!GPIORead(ECHO)) {
 		}
 		double start_time = clock();
+		int flag = 0;
 		while (GPIORead(ECHO)) {
+			if (clock() - start_time >
+			    TIMEOUT_SEC * CLOCKS_PER_SEC) {
+				flag = 1;
+				break;
+			}
+		}
+		if (flag) {
+			printf("Timeout reached, sleeping for one second\n");
+			sleep(1);
+			continue;
 		}
 		double end_time = clock();
 		search_time = end_time - start_time;

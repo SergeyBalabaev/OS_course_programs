@@ -42,7 +42,7 @@ void help()
 void callback(int way)
 {
 	static int pos = 0;
-	pos += way;
+	pos -= way;
 	if (!quiet)
 		printf("increment:%d\n", pos);
 	if (quiet)
