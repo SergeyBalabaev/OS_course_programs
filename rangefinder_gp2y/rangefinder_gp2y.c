@@ -1,62 +1,37 @@
+/*******************************************************************************
+ * Copyright (c) 2018 Dmitrii Kaleev (kaleev@org.miet.ru)                      *
+ *                                                                             *
+ * The MIT License (MIT):                                                      *
+ * Permission is hereby granted, free of charge, to any person obtaining a     *
+ * copy of this software and associated documentation files (the "Software"),  *
+ * to deal in the Software without restriction, including without limitation   *
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,    *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell   *
+ * copies of the Software, and to permit persons to whom the Software is       *
+ * furnished to do so, subject to the following conditions:                    *
+ * The above copyright notice and this permission notice shall be included     *
+ * in all copies or substantial portions of the Software.                      *
+ *                                                                             *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,    *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,             *
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR       *
+ * OTHER DEALINGS IN THE SOFTWARE.                                             *
+ ******************************************************************************/
+
+
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <stdint.h>
+#include <math.h>
 #include <unistd.h>
-
+#include <stdlib.h>
+#include <string.h>
 #include <wiringPi.h>
-#include <wiringSerial.h>
+#include <ads1115.h>
 
-#define SERIALPORT "/dev/ttyAMA1"
-
-typedef enum { INCH = 0, CM, MM } UNIT;
-
-uint16_t getUnits(uint16_t data, UNIT unit)
-{
-	float output;
-	switch (unit) {
-	case INCH:
-		output = data;
-		break;
-	case CM:
-		output = 2.54 * data;
-		break;
-	case MM:
-		output = 2.54 * data * 10;
-		break;
-	default: // default to inches
-		output = data;
-		break;
-	}
-
-	return output;
-}
-
-uint16_t getDistance(int serial_port, UNIT unit)
-{
-	int i = 0;
-	uint16_t data = 0;
-	char rgbTemp[3];
-	if (serialGetchar(serial_port)) {
-		if (serialGetchar(serial_port) == 'R') {
-			for (i = 0; i < 3; i++) {
-				while (!serialDataAvail(serial_port))
-					;
-				rgbTemp[i] = serialGetchar(serial_port);
-			}
-			if (serialGetchar(serial_port) ==
-			    13) { // check for return character
-				data = atoi(rgbTemp);
-			} else {
-				data = 0; // packet error
-			}
-		} else {
-			data = 0; // packet error
-		}
-	}
-	return getUnits(data, unit);
-}
+#define	AD_BASE 122
+#define AD_ADDR 0x48
 
 void help()
 {
@@ -68,77 +43,56 @@ void help()
 	printf("    -q - quiet\n");
 }
 
-int main(int argc, char *argv[])
+int clamp(int x, int min, int max) {
+    return (x < min) ? min : ((x > max) ? max : x);
+}
+
+int main(int argc, char *argv[]) 
 {
 	int quiet = 0;
-	int sl = 100;
-	if (argc == 2) {
+	if (argc > 1) {
 		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
-		} else
-			sl = atoi(argv[1]);
-	} else if (argc == 3) {
-		if ((strcmp(argv[1], "-q") == 0)) {
-			quiet = 1;
-			sl = atoi(argv[2]);
 		} else {
-			help();
-			return 0;
+			if ((strcmp(argv[1], "-q") == 0)) {
+				quiet = 1;
+			}
 		}
-	} else {
+	}
+
+	if ((quiet && argc != 3) || (!quiet && argc != 2)) {
 		help();
 		return 0;
 	}
 
 	if (!quiet)
 		printf("\nThe rangefinder application was started\n\n");
-	int serial_port;
-	char dat;
-	if ((serial_port = serialOpen(SERIALPORT, 9600)) <
-	    0) /* open serial port */
-	{
-		fprintf(stderr, "Unable to open serial device: %s\n",
-			strerror(errno));
-		return 1;
-	}
 
-	if (wiringPiSetup() == -1) /* initializes wiringPi setup */
-	{
-		fprintf(stdout, "Unable to start wiringPi: %s\n",
-			strerror(errno));
-		return 1;
-	}
-	if (!quiet)
-		while (1) {
-			{
-				if (serialDataAvail(serial_port)) {
-					dat = getDistance(
-						serial_port,
-						CM); /* receive character serially*/
-					if (dat != 0)
-						printf("Length = %d cm\n", dat);
-				}
-			}
-			if ((sl > 0) && (sl < 60000))
-				usleep(sl * 1000);
-			else
-				sleep(1);
-		}
-	else
-		while (1) {
-			{
-				if (serialDataAvail(serial_port)) {
-					dat = getDistance(
-						serial_port,
-						CM); /* receive character serially*/
-					if (dat != 0)
-						printf("%d\n", dat);
-				}
-			}
-			if ((sl > 0) && (sl < 60000))
-				usleep(sl * 1000);
-			else
-				sleep(1);
-		}
+	int argument = 1;
+	if (quiet)
+		argument++;
+    int delay_ms = atoi(argv[argument]);
+
+    wiringPiSetup();
+    ads1115Setup(AD_BASE, AD_ADDR);
+    digitalWrite(AD_BASE, 0);
+
+    while(1) {
+        float voltage = ((float)analogRead(AD_BASE+2) * 0.1875 / 1000.0);
+        
+        // Power regression approximation
+        // Distance is clamped between 20 and 150 cm
+        int distance = clamp(round(61.3894*pow(voltage, -1.1076)), 20, 150);
+
+		if (!quiet)
+			printf("Length = %d cm\n", distance);
+		else
+			printf("%d\n", distance);
+
+        fflush(stdout);
+        usleep(1000 * delay_ms);
+    }
+
+    return 0;
 }
