@@ -17,14 +17,21 @@ void help()
 	printf("    \tBlue color luminance [lux]\n");
 	printf("    \tIR luminance [lux]\n");
 	printf("    \tAmbient Light Luminance [lux]\n");
+	printf("    -q - quiet\n");
+	printf("    return: \n");
+	printf("    \tcode: R G B\n");
 }
 
 int main(int argc, char *argv[])
 {
+	int quiet = 0;
 	if (argc > 1) {
 		if ((strcmp(argv[1], "-h") == 0)) {
 			help();
 			return 0;
+		}
+		if ((strcmp(argv[1], "-q") == 0)) {
+			quiet = 1;
 		}
 	}
 	// Create I2C bus
@@ -78,10 +85,14 @@ int main(int argc, char *argv[])
 			luminance = 0;
 		}
 		// Output data to screen
-		printf("Red color luminance : %d lux \n", red);
-		printf("Green color luminance : %d lux \n", green);
-		printf("Blue color luminance : %d lux \n", blue);
-		printf("IR luminance : %d lux \n", cData);
-		printf("Ambient Light Luminance : %.2f lux \n", luminance);
+		if (!quiet) {
+			printf("Red color luminance : %d lux \n", red);
+			printf("Green color luminance : %d lux \n", green);
+			printf("Blue color luminance : %d lux \n", blue);
+			printf("IR luminance : %d lux \n", cData);
+			printf("Ambient Light Luminance : %.2f lux \n",
+			       luminance);
+		} else
+			printf("code: %d %d %d", red, green, blue);
 	}
 }
