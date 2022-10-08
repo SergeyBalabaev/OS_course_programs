@@ -9,7 +9,6 @@ gcc MFRC522.c spi.c gpio.c rfid_reader.c -o rfid_reader
 -h - описание работы  
 -q - тихий режим 
 
-
 Пример работы: 
 ```   
  sudo ./rfid_reader

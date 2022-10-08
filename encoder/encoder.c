@@ -32,7 +32,7 @@ int quiet = 0;
 void help()
 {
 	printf("    Use this application for reading from encoder\n");
-	printf("    execute format: ./light_detect [-h][-q] \n");
+	printf("    execute format: ./encoder [-h][-q] \n");
 	printf("    return: increment value, when rotate right\n");
 	printf("            decrement value, when rotate left\n");
 	printf("    -h - help\n");
