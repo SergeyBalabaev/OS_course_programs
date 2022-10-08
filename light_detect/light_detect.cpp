@@ -82,10 +82,13 @@ int main(int argc, char *argv[])
 	uint16_t pause_time = atoi(argv[argument]);
 	while (true) {
 		adc0 = ads.readADC_SingleEnded(ADC_PIN);
-		if (quiet)
+		if (quiet) {
 			printf("%d\n", adc0);
-		else
+			fflush(stdout);
+		} else {
 			printf("ADC: %d\n", adc0);
+			fflush(stdout);
+		}
 		usleep(pause_time * 1000);
 	}
 }
