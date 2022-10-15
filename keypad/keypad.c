@@ -29,11 +29,18 @@
 
 char pressedKey = '\0';
 
-//int rowPins[ROWS] = { 25, 16, 17, 18 }; 	// 25, 16, 17, 18; R3, R2, R1, R0
-//int colPins[COLS] = { 19, 21, 21 }; 	// 19 ,21, 20; C2, C1, C0
+//int rowPins[ROWS] = { 25, 16, 17, 18 }; // R4, R3, R2, R1				// 25, 16, 17, 18; R3, R2, R1, R0
+//int colPins[COLS] = { 19, 21, 20 };  // C3, C2, C1				// 19 ,21, 20; C2, C1, C0
 
-int rowPins[ROWS] = { 4, 25, 11, 8 }; // R3, R2, R1, R0
-int colPins[COLS] = { 7, 6, 5 }; // C2, C1, C0
+//int rowPins[ROWS] = { 4, 25, 11, 8 }; // R3, R2, R1, R0
+//int colPins[COLS] = { 7, 6, 5 }; // C2, C1, C0
+
+int rowPins[ROWS] = { 27, 26, 11, 8 }; // R3, R2, R1, R0
+int colPins[COLS] = { 25, 13, 12 }; // C2, C1, C0
+
+//int rowPins[ROWS] = { 18, 17, 16, 25 }; // R4, R3, R2, R1				// 25, 16, 17, 18; R3, R2, R1, R0
+//int colPins[COLS] = { 20, 21, 19 };  // C3, C2, C1				// 19 ,21, 20; C2, C1, C0
+
 
 char keys[ROWS][COLS] = { { '1', '2', '3' },
 			  { '4', '5', '6' },

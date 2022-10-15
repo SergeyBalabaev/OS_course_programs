@@ -39,7 +39,7 @@
 
 //***************************//
 #define TRIG 11 // GPIO PIN TRIG
-#define ECHO 8 // GPIO PIN ECHO
+#define ECHO 26 // GPIO PIN ECHO
 //***************************//
 
 void Exiting(int);
@@ -66,7 +66,7 @@ int read_pins_file(char *file)
 
 static int GPIOExport(int pin)
 {
-#define BUFFER_MAX 3
+	#define BUFFER_MAX 3
 	char buffer[BUFFER_MAX];
 	ssize_t bytes_written;
 	int fd;
@@ -105,7 +105,7 @@ static int GPIODirection(int pin, int dir)
 {
 	static const char s_directions_str[] = "in\0out";
 
-#define DIRECTION_MAX 35
+	#define DIRECTION_MAX 35
 	char path[DIRECTION_MAX];
 	int fd;
 
@@ -128,7 +128,7 @@ static int GPIODirection(int pin, int dir)
 
 static int GPIORead(int pin)
 {
-#define VALUE_MAX 30
+	#define VALUE_MAX 30
 	char path[VALUE_MAX];
 	char value_str[3];
 	int fd;
@@ -244,9 +244,10 @@ int main(int argc, char *argv[])
 	signal(SIGINT, Exiting_sig);
 	GPIOExport(TRIG);
 	GPIOExport(ECHO);
+	sleep(0.05);
 	GPIODirection(TRIG, OUT);
 	GPIODirection(ECHO, IN);
-	sleep(0.05);
+	
 	int argument = 1;
 	if (quiet)
 		argument++;

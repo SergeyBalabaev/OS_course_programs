@@ -30,7 +30,10 @@
 #include <ads1115.h>
 
 #define AD_BASE 122
-#define AD_ADDR 0x48
+#define AD_ADDR 0x48 //i2c address
+
+#define ADC_PIN 2
+
 
 void help()
 {
@@ -80,7 +83,7 @@ int main(int argc, char *argv[])
 
 	while (1) {
 		float voltage =
-			((float)analogRead(AD_BASE + 2) * 0.1875 / 1000.0);
+			((float)analogRead(AD_BASE + ADC_PIN) * 0.1875 / 1000.0);
 
 		// Power regression approximation
 		// Distance is clamped between 20 and 150 cm
