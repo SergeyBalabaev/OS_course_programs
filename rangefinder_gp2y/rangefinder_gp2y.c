@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Dmitrii Kaleev (kaleev@org.miet.ru)                      *
+ * Copyright (c) 2022 Gerasimenko Evgeniy (evgenyger.work@gmail.com)                      *
  *                                                                             *
  * The MIT License (MIT):                                                      *
  * Permission is hereby granted, free of charge, to any person obtaining a     *
@@ -82,22 +82,14 @@ int main(int argc, char *argv[])
 	digitalWrite(AD_BASE, 0);
 
 	while (1) {
-		float voltage =
-			((float)analogRead(AD_BASE + ADC_PIN) * 0.1875 / 1000.0);
-
-		// Power regression approximation
-		// Distance is clamped between 20 and 150 cm
-		int distance =
-			clamp(round(61.3894 * pow(voltage, -1.1076)), 20, 150);
-
+		int ADC_VAL =analogRead(AD_BASE + ADC_PIN);
 		if (!quiet)
-			printf("Length = %d cm\n", distance);
+			printf("ADC: %d \n", ADC_VAL);
 		else
-			printf("%d\n", distance);
+			printf("%d\n", ADC_VAL);
 
 		fflush(stdout);
 		usleep(1000 * delay_ms);
 	}
-
 	return 0;
 }

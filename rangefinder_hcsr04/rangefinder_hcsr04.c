@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Dmitrii Kaleev (kaleev@org.miet.ru)                      *
+ * Copyright (c) 2022 Sergey Balabaev (sergei.a.balabaev@gmail.com)                      *
  *                                                                             *
  * The MIT License (MIT):                                                      *
  * Permission is hereby granted, free of charge, to any person obtaining a     *
@@ -279,9 +279,9 @@ int main(int argc, char *argv[])
 		sl = atoi(argv[argument]);
 
 		if (!quiet)
-			printf("Length = %lf cm\n", search_time / 58);
+			printf("signal_delay: %lf ms\n", search_time);
 		else
-			printf("%lf\n", search_time / 58);
+			printf("%lf\n", search_time);
 		fflush(stdout);
 		if ((sl > 0) && (sl < 60000))
 			usleep(sl * 1000);
