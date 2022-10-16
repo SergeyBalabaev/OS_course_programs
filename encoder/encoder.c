@@ -42,9 +42,9 @@ void help()
 void callback(int way)
 {
 	static int pos = 0;
-	pos -= way;
+	pos -= way*360/20;
 	if (!quiet)
-		printf("increment:%d\n", pos);
+		printf("angle increment: %d\n", pos);
 	if (quiet)
 		printf("%d\n", pos);
 }
