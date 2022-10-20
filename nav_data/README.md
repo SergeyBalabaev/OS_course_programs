@@ -4,7 +4,6 @@
 ```
 gcc nav_data.c -o nav_data -Wall  
 ```
-
 Запуск:  
 sudo ./nav_data [-h][-t][-g]  
 -h - описание работы  
