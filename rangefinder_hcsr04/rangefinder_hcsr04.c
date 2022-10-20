@@ -220,25 +220,6 @@ int main(int argc, char *argv[])
 
 	if (!quiet)
 		printf("\nThe rangefinder application was started\n\n");
-	char *mode = argv[1 + quiet];
-
-	if (strcmp(mode, "-s") == 0) {
-		char data[32];
-		while (1) {
-			scanf("%s", data);
-			fflush(stdin);
-			printf("%s\n", data);
-			fflush(stdout);
-		}
-	}
-
-	if (strcmp(mode, "-f") == 0) {
-		char *file = argv[2 + quiet];
-		if (read_pins_file(file) < 0)
-			return -1;
-		else
-			return 0;
-	}
 
 	double search_time = 0;
 	signal(SIGINT, Exiting_sig);
