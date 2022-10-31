@@ -34,7 +34,6 @@
 
 #define ADC_PIN 2
 
-
 void help()
 {
 	printf("    Use this application for reading from rangefinder\n");
@@ -82,7 +81,7 @@ int main(int argc, char *argv[])
 	digitalWrite(AD_BASE, 0);
 
 	while (1) {
-		int ADC_VAL =analogRead(AD_BASE + ADC_PIN);
+		int ADC_VAL = analogRead(AD_BASE + ADC_PIN);
 		if (!quiet)
 			printf("ADC: %d \n", ADC_VAL);
 		else

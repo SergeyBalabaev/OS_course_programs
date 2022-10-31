@@ -32,10 +32,9 @@ int debug = 0;
 
 void help()
 {
-	printf("    Use this application for reading from rangefinder\n");
-	printf("    execute format: ./range TIME \n");
-	printf("    return: length in cm\n");
-	printf("    TIME - pause between writing in ms\n");
+	printf("    Use this application for reading from rfid reader\n");
+	printf("    execute format: ./rfid_reader [-h][-q] \n");
+	printf("    return: Card ID\n");
 	printf("    -h - help\n");
 	printf("    -q - quiet\n");
 }
@@ -76,5 +75,6 @@ int main(int argc, char *argv[])
 	if (status == MI_OK) {
 		// print UID
 		printf("%02x %02x %02x %02x\n", uid[0], uid[1], uid[2], uid[3]);
+		fflush(stdout);
 	}
 }

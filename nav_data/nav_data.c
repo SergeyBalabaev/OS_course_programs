@@ -64,6 +64,7 @@ void askTemp(int file)
 	read(file, data, 1);
 	temp = 25 - data[0];
 	printf("Temp deviation : %d\n", temp);
+	fflush(stdout);
 }
 
 void askGiro(int file, char pos, double time)
@@ -236,6 +237,7 @@ int main(int argc, char *argv[])
 			askGiro(file, 'X', TIME);
 			askGiro(file, 'Y', TIME);
 			askGiro(file, 'Z', TIME);
+			fflush(stdout);
 			usleep(TIME * 1000);
 		}
 

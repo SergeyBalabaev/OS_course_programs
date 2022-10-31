@@ -47,6 +47,7 @@ void callback(int way)
 		printf("angle increment: %d\n", pos);
 	if (quiet)
 		printf("%d\n", pos);
+	fflush(stdout);
 }
 
 int main(int argc, char *argv[])

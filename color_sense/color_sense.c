@@ -21,7 +21,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.                                             *
  ******************************************************************************/
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <linux/i2c-dev.h>
@@ -29,6 +28,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+
+#define SLEEP_TIME 100
 
 void help()
 {
@@ -116,7 +117,12 @@ int main(int argc, char *argv[])
 			printf("IR luminance : %d lux \n", cData);
 			printf("Ambient Light Luminance : %.2f lux \n",
 			       luminance);
+			fflush(stdout);
 		} else
-			printf("code: %d %d %d", red, green, blue);
+			while (1) {
+				printf("code: %d %d %d", red, green, blue);
+				fflush(stdout);
+				usleep(SLEEP_TIME * 1000);
+			}
 	}
 }

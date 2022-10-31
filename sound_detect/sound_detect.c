@@ -174,6 +174,7 @@ int main(int argc, char *argv[])
 		next = GPIORead(GPIO_PIN);
 		if (prev < next) {
 			printf("Clap!\n");
+			fflush(stdout);
 			usleep(10000);
 		}
 		prev = next;

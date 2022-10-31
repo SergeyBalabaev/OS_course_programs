@@ -95,7 +95,7 @@ char get_key()
 void help()
 {
 	printf("    Use this application for keypad\n");
-	printf("    execute format: ./light_detect [-h] \n");
+	printf("    execute format: ./keypad [-h] \n");
 	printf("    return: enter button\n");
 	printf("    -h - help\n");
 	printf("    -q - quiet\n");
@@ -128,6 +128,7 @@ int main(int argc, char *argv[])
 		} else if (!quiet)
 			printf("no key pressed\n");
 		time_sleep(0.5);
+		fflush(stdout);
 		system("clear");
 	}
 	gpioTerminate();
