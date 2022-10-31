@@ -7,10 +7,9 @@
 
 #define MAX_LEN 16
 
-//# define	NRSTPD	22
 #define NRSTPD 13
 
-#define DEV "/dev/spidev1.0"
+#define DEV "/dev/spidev1.1"
 extern int debug;
 
 static uint32_t speed = 1000000;
