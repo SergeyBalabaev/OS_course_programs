@@ -60,21 +60,29 @@ int main(int argc, char *argv[])
 	unsigned char blockno;
 	char *next;
 
-
 	MFRC522_Init(0);
+	while (1) {
+		while ((status = MFRC522_Request(PICC_REQIDL, &backBits)) !=
+		       MI_OK)
+			usleep(500);
 
-	while ((status = MFRC522_Request(PICC_REQIDL, &backBits)) != MI_OK)
-		usleep(500);
+		if (status == MI_OK)
+			if (!quiet)
+				printf("Card detected\n");
 
-	if (status == MI_OK)
-		if (!quiet)
-			printf("Card detected\n");
+		status = MFRC522_Anticoll(&uid);
 
-	status = MFRC522_Anticoll(&uid);
-
-	if (status == MI_OK) {
-		// print UID
-		printf("%02x %02x %02x %02x\n", uid[0], uid[1], uid[2], uid[3]);
+		if (status == MI_OK) {
+			// print UID
+			if (!quiet) {
+				printf("%02x %02x %02x %02x\n", uid[0], uid[1],
+				       uid[2], uid[3]);
+				break;
+			}
+			printf("%02x %02x %02x %02x\n", uid[0], uid[1], uid[2],
+			       uid[3]);
+			sleep(1);
+		}
 		fflush(stdout);
 	}
 }
