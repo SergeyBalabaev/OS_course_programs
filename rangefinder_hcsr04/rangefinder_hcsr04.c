@@ -37,10 +37,27 @@
 #define LOW 0
 #define HIGH 1
 
-//***************************//
-#define TRIG 11 // GPIO PIN TRIG
-#define ECHO 26 // GPIO PIN ECHO
-//***************************//
+#define VARX
+
+#ifdef VAR2
+int TRIG = 8; // GPIO PIN TRIG
+int ECHO = 11; // GPIO PIN ECHO				
+#endif
+
+#ifdef VAR7_1
+int TRIG = 26; // GPIO PIN TRIG
+int ECHO = 27; // GPIO PIN ECHO
+#endif
+
+#ifdef VAR7_2
+int TRIG = 8; // GPIO PIN TRIG
+int ECHO = 11; // GPIO PIN ECHO
+#endif
+
+#ifdef VAR9
+int TRIG = 8; // GPIO PIN TRIG
+int ECHO = 11; // GPIO PIN ECHO	
+#endif
 
 void Exiting(int);
 

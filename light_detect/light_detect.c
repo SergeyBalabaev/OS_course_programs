@@ -39,7 +39,7 @@
 	}
 
 //***************************//
-#define ADC_PIN 0 // GPIO PIN TRIG
+#define ADC_PIN 0 // GPIO PIN 
 //***************************//
 #define THRESHOLD 5000
 
