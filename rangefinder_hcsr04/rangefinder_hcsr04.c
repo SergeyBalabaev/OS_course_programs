@@ -272,12 +272,12 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		double end_time = clock();
-		search_time = end_time - start_time;
+		search_time = (end_time - start_time)/CLK_TCK;
 
 		sl = atoi(argv[argument]);
 
 		if (!quiet)
-			printf("signal_delay: %lf ms\n", search_time);
+			printf("signal_delay: %lf s\n", search_time);
 		else
 			printf("%lf\n", search_time);
 		fflush(stdout);
